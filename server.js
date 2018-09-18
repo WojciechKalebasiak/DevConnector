@@ -20,6 +20,7 @@ mongoose
   .catch(err => console.log(err));
 //Passport
 app.use(passport.initialize());
+
 //Passport config
 require("./config/passport")(passport);
 

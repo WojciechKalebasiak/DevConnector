@@ -49,12 +49,13 @@ router.post("/register", (req, res) => {
       }
     })
     .then(salt => bcrypt.hash(password, salt))
+    //Hash Password and save user to DB
     .then(hashedPassword => {
       const newUser = new User({
         name,
         email,
         password: hashedPassword,
-        gravatar
+        avatar
       });
       return newUser.save();
     })
