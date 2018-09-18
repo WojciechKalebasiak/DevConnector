@@ -4,6 +4,7 @@ const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/key.json");
+const passport = require("passport");
 //Load user model
 const User = require("../../models/User");
 // @route /GET api/users/test
@@ -57,7 +58,7 @@ router.post("/login", (req, res) => {
             avatar: user.avatar
           };
           jwt.sign(payload, keys.secret, { expiresIn: 3600 }, (err, token) => {
-            res.json({ success: true, token });
+            res.json({ success: true, token: `Bearer ${token}` });
           });
         } else {
           res.status(401).json({ password: "Password not correct" });
@@ -66,4 +67,18 @@ router.post("/login", (req, res) => {
     })
     .catch(e => res.status(500).json({ msg: "Something went wrong" }));
 });
+// @route /POST api/users/current
+// @desc Return current user
+// @acces Private
+router.get(
+  "/current",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email
+    });
+  }
+);
 module.exports = router;
