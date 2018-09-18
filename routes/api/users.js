@@ -5,8 +5,14 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/key.json");
 const passport = require("passport");
+
 //Load user model
 const User = require("../../models/User");
+
+//Load validators
+const validateRegister = require("../../validation/register");
+const validateLogin = require("../../validation/login");
+
 // @route /GET api/users/test
 // @desc Test users route
 // @acces Public
@@ -15,10 +21,15 @@ router.get("/test", (req, res) => {
     message: "Users works"
   });
 });
+
 // @route /POST api/users/register
 // @desc Register a user
 // @acces Public
 router.post("/register", (req, res) => {
+  const { errors, isValid } = validateRegister(req.body);
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
   const { email, name, password } = req.body;
   const avatar = gravatar.url(email, {
     s: "200",
@@ -40,10 +51,15 @@ router.post("/register", (req, res) => {
     .then(user => res.status(200).json({ user }))
     .catch(err => res.status(400).json(err.message));
 });
+
 // @route /POST api/users/login
 // @desc Login User / Returning JWT Token
 // @acces Public
 router.post("/login", (req, res) => {
+  const {errors, isValid} = validateLogin(req.body);
+  if(!isValid) {
+    return res.status(400).json(errors);
+  }
   const { email, password } = req.body;
   User.findOne({ email })
     .then(user => {
@@ -67,6 +83,7 @@ router.post("/login", (req, res) => {
     })
     .catch(e => res.status(500).json({ msg: "Something went wrong" }));
 });
+
 // @route /POST api/users/current
 // @desc Return current user
 // @acces Private
