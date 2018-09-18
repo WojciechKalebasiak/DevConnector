@@ -5,7 +5,10 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const keys = require("../../config/key.json");
 const passport = require("passport");
-
+const mongoose = require("mongoose");
+mongoose.Promise = global.Promise;
+//Load is empty
+const isEmpty = require("../../validation/is-empty");
 //Load user model
 const User = require("../../models/User");
 
@@ -13,51 +16,58 @@ const User = require("../../models/User");
 const validateRegister = require("../../validation/register");
 const validateLogin = require("../../validation/login");
 
-// @route /GET api/users/test
-// @desc Test users route
-// @acces Public
-router.get("/test", (req, res) => {
-  res.json({
-    message: "Users works"
-  });
-});
-
 // @route /POST api/users/register
 // @desc Register a user
 // @acces Public
 router.post("/register", (req, res) => {
-  const { errors, isValid } = validateRegister(req.body);
-  if (!isValid) {
-    return res.status(400).json(errors);
-  }
   const { email, name, password } = req.body;
   const avatar = gravatar.url(email, {
     s: "200",
     r: "pg",
     d: "mm"
   });
-  bcrypt
-    .genSalt(10)
+  let { errors, isValid } = validateRegister(req.body);
+
+  //Validation
+  if (!isValid) {
+    return res.status(400).json(errors);
+  }
+
+  //Check if user with this email and/or id already exists
+  User.findOne({ $or: [{ email }, { name }] })
+    .then(user => {
+      if (user) {
+        if (user.name === name) {
+          errors.name = "Name already used";
+        }
+        if (user.email === email) {
+          errors.email = "Email already used";
+        }
+        return res.status(400).json(errors);
+      } else {
+        return bcrypt.genSalt(10);
+      }
+    })
     .then(salt => bcrypt.hash(password, salt))
     .then(hashedPassword => {
       const newUser = new User({
-        email,
         name,
+        email,
         password: hashedPassword,
-        avatar
+        gravatar
       });
       return newUser.save();
     })
-    .then(user => res.status(200).json({ user }))
-    .catch(err => res.status(400).json(err.message));
+    .then(user => res.status(200).json(user))
+    .catch(err => res.status(500).end());
 });
 
 // @route /POST api/users/login
 // @desc Login User / Returning JWT Token
 // @acces Public
 router.post("/login", (req, res) => {
-  const {errors, isValid} = validateLogin(req.body);
-  if(!isValid) {
+  const { errors, isValid } = validateLogin(req.body);
+  if (!isValid) {
     return res.status(400).json(errors);
   }
   const { email, password } = req.body;
