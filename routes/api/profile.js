@@ -8,7 +8,6 @@ const validateProfile = require("../../validation/profile");
 const validateExperience = require("../../validation/experience");
 const validateEducation = require("../../validation/education");
 
-
 //Load Profile Model
 const Profile = require("../../models/Profile");
 
@@ -211,6 +210,62 @@ router.post(
         res.json(updatedProfile);
       });
     });
+  }
+);
+
+// @route /DELETE api/profile/experience/:exp_id
+// @desc Delete experience from profile
+// @acces Private
+router.delete(
+  "/experience/:exp_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        profile.experience = profile.experience.filter(
+          exp => exp.id !== req.params.exp_id
+        );
+        profile.save().then(profile => {
+          res.json(profile);
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+
+// @route /DELETE api/profile/education/:edu_id
+// @desc Delete education from profile
+// @acces Private
+router.delete(
+  "/education/:edu_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id })
+      .then(profile => {
+        profile.education = profile.education.filter(
+          edu => edu.id !== req.params.edu_id
+        );
+        profile.save().then(profile => {
+          res.json(profile);
+        });
+      })
+      .catch(err => res.status(404).json(err));
+  }
+);
+// @route /DELETE api/profile/
+// @desc Delete user and profile
+// @acces Private
+router.delete(
+  "/",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOneAndRemove({ user: req.user.id })
+      .then(() => {
+        User.findByIdAndRemove(req.user.id).then(() => {
+          res.json({ success: true });
+        });
+      })
+      .catch(err => res.status(404).json(err));
   }
 );
 module.exports = router;
