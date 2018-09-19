@@ -87,4 +87,33 @@ router.delete(
     });
   }
 );
+
+// @route /PUT api/posts/:post_id
+// @desc Update post by id
+// @acces Private
+router.put(
+  "/:post_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    const { errors, isValid } = validatePost(req.body);
+    if (!isValid) {
+      return res.status(400).json(errors);
+    }
+    Post.findById(req.params.post_id).then(post => {
+      if (!post) {
+        return res
+          .status(404)
+          .json({ nopostfound: "No post found with that ID" });
+      }
+      if (post.user.toString() !== req.user.id) {
+        return res.status(401).json({ notauthorized: "User not authorized" });
+      }
+      post.text = req.body.text;
+      post
+        .save()
+        .then(post => res.json(post))
+        .catch(err => res.status(404).end());
+    });
+  }
+);
 module.exports = router;
