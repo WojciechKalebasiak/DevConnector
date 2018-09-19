@@ -3,7 +3,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 const Post = require("../../models/Post");
-
+const Profile = require("../../models/Profile");
 //Validation
 const validatePost = require("../../validation/post");
 
@@ -38,12 +38,12 @@ router.get("/", (req, res) => {
   Post.find({})
     .sort({ date: -1 })
     .then(posts => {
-      if(!posts) {
-        return res.status(404).json({nopostfound:"No posts found"});
+      if (!posts) {
+        return res.status(404).json({ nopostfound: "No posts found" });
       }
       res.json(posts);
     })
-    .catch(err => res.status(404).json({nopostfound:"No posts found"}));
+    .catch(err => res.status(404).json({ nopostfound: "No posts found" }));
 });
 
 // @route /GET api/posts/:post_id
@@ -52,11 +52,39 @@ router.get("/", (req, res) => {
 router.get("/:post_id", (req, res) => {
   Post.findById(req.params.post_id)
     .then(post => {
-      if(!post) {
-        return res.status(404).json({nopostfound:"No post found with that ID"});
+      if (!post) {
+        return res
+          .status(404)
+          .json({ nopostfound: "No post found with that ID" });
       }
       res.json(post);
     })
-    .catch(err => res.status(404).json({nopostfound:"No post found with that ID"}));
+    .catch(err =>
+      res.status(404).json({ nopostfound: "No post found with that ID" })
+    );
 });
+
+// @route /DELETE api/posts/:post_id
+// @desc Delete post by id
+// @acces Private
+router.delete(
+  "/:post_id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Post.findById(req.params.post_id).then(post => {
+      if (!post) {
+        return res
+          .status(404)
+          .json({ nopostfound: "No post found with that ID" });
+      }
+      if (post.user.toString() !== req.user.id) {
+        return res.status(401).json({ notauthorized: "User not authorized" });
+      }
+      post
+        .remove()
+        .then(post => res.json({ success: true }))
+        .catch(err => res.status(404).end());
+    });
+  }
+);
 module.exports = router;
