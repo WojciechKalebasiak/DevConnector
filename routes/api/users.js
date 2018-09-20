@@ -60,7 +60,7 @@ router.post("/register", (req, res) => {
       return newUser.save();
     })
     .then(user => res.status(200).json(user))
-    .catch(err => res.status(500).end());
+    .catch(err => res.status(400).json(err.errors));
 });
 
 // @route /POST api/users/login

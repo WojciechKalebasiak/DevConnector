@@ -30,7 +30,7 @@ class Login extends Component {
               <p className="lead text-center">
                 Sign in to your DevConnector account
               </p>
-              <form action={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <div className="form-group">
                   <input
                     type="email"
