@@ -17,7 +17,7 @@ class Register extends Component {
     };
   }
   static getDerivedStateFromProps(props, state) {
-    if (props.errors) {
+    if (props.errors !== state.errors) {
       return {
         errors: props.errors
       };
@@ -37,6 +37,11 @@ class Register extends Component {
     };
     this.props.registerUser(newUser, this.props.history);
   };
+  componentDidMount() {
+    if (this.props.auth.isAuthenticated) {
+      this.props.history.push("/dashboard");
+    }
+  }
   render() {
     const { errors } = this.state;
     return (

@@ -7,7 +7,25 @@ import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import { Provider } from "react-redux";
 import store from "./store";
+import jwt_decode from "jwt-decode";
+import setAuthToken from "./utlis/setAuthToken";
+import { setCurrentUser, logoutUser } from "./actions/authActions";
 import "./App.css";
+
+//Check for token
+if (localStorage.jwtToken) {
+  setAuthToken(localStorage.jwtToken);
+  const decoded = jwt_decode(localStorage.jwtToken);
+  store.dispatch(setCurrentUser(decoded));
+
+  //Check for expires
+  const currentTime = Date.now() / 1000;
+  const expTime = decoded.exp;
+  if (currentTime > expTime) {
+    store.dispatch(logoutUser());
+    window.location.href = "/login";
+  }
+}
 class App extends Component {
   render() {
     return (
