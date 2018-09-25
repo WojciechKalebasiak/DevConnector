@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import classnames from "classnames";
 import { loginUser } from "../../actions/authActions";
 import { withRouter } from "react-router-dom";
+import TextFieldGroup from '../common/TexFieldGroup';
 //Redux
 import { connect } from "react-redux";
 
@@ -54,30 +54,8 @@ class Login extends Component {
                 Sign in to your DevConnector account
               </p>
               <form onSubmit={this.handleSubmit}>
-                <div className="form-group">
-                  <input
-                    type="email"
-                    className={classnames("form-control", "form-control-lg", {
-                      "is-invalid": errors.email
-                    })}
-                    placeholder="Email Address"
-                    name="email"
-                    onChange={this.handleInput}
-                  />
-                  <div className="invalid-feedback">{errors.email}</div>
-                </div>
-                <div className="form-group">
-                  <input
-                    type="password"
-                    className={classnames("form-control", "form-control-lg", {
-                      "is-invalid": errors.password
-                    })}
-                    placeholder="Password"
-                    name="password"
-                    onChange={this.handleInput}
-                  />
-                  <div className="invalid-feedback">{errors.password}</div>
-                </div>
+                <TextFieldGroup placeholder="Email Address" value={this.state.email} name="email" onChange={this.handleInput} error={errors.email}/>
+                <TextFieldGroup type="password" value={this.state.password} placeholder="Password" name="password" onChange={this.handleInput} error={errors.password}/>
                 <input type="submit" className="btn btn-info btn-block mt-4" />
               </form>
             </div>

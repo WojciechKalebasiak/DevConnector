@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { logoutUser } from "../../actions/authActions";
+import { clearCurrentProfile } from "../../actions/profileActions";
+
 class Navbar extends Component {
   onLogoutClick = e => {
     e.preventDefault();
+    this.props.clearProfile();
     this.props.logout();
   };
   render() {
@@ -71,13 +74,15 @@ class Navbar extends Component {
 }
 Navbar.propTypes = {
   logout: PropTypes.func.isRequired,
+  clearProfile: PropTypes.func.isRequired,
   auth: PropTypes.object.isRequired
 };
 const mapStateToProps = state => ({
   auth: state.auth
 });
 const mapDispatchToProps = dispatch => ({
-  logout: () => dispatch(logoutUser())
+  logout: () => dispatch(logoutUser()),
+  clearProfile: () => dispatch(clearCurrentProfile())
 });
 export default connect(
   mapStateToProps,
