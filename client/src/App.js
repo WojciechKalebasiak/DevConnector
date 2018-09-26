@@ -19,6 +19,7 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 
 import "./App.css";
+import EditProfile from "./components/editProfile/EditProfile";
 
 //Check for token
 if (localStorage.jwtToken) {
@@ -51,6 +52,11 @@ class App extends Component {
                 exact
                 path="/create-profile"
                 component={createProfile}
+              />
+              <PrivateRoute
+                exact
+                path="/edit-profile"
+                component={EditProfile}
               />
             </div>
             <Footer />

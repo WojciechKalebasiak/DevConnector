@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import TextFieldGroup from "../common/TextFieldGroup";
 import InputGroup from "../common/InputGroup";
 import SelectListGroup from "../common/SelectListGroup";
 import TextAreaFieldGroup from "../common/TextAreaFieldGroup";
-
-import { createProfile } from "../../actions/profileActions";
-class CreateProfile extends Component {
+import isEmpty from "../../utlis/is-empty";
+import { createProfile, getCurrentUser } from "../../actions/profileActions";
+class EditProfile extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -28,6 +28,67 @@ class CreateProfile extends Component {
       instagram: "",
       errors: {}
     };
+  }
+  componentDidMount() {
+    this.props.getCurrentProfile().then(() => {
+      const { profile } = this.props.profile;
+      if (profile) {
+        const skills = Array.isArray(profile.skills)
+          ? profile.skills.join(",")
+          : profile.skills;
+        profile.skills = skills;
+        profile.company = !isEmpty(profile.company) ? profile.company : "";
+        profile.website = !isEmpty(profile.website) ? profile.website : "";
+        profile.location = !isEmpty(profile.location) ? profile.location : "";
+        profile.bio = !isEmpty(profile.bio) ? profile.bio : "";
+        profile.githubusername = !isEmpty(profile.githubusername)
+          ? profile.githubusername
+          : "";
+        if (profile.social) {
+          profile.social.twitter = !isEmpty(profile.social.twitter)
+            ? profile.social.twitter
+            : "";
+          profile.social.facebook = !isEmpty(profile.social.facebook)
+            ? profile.social.facebook
+            : "";
+          profile.social.youtube = !isEmpty(profile.social.youtube)
+            ? profile.social.youtube
+            : "";
+          profile.social.instagram = !isEmpty(profile.social.instagram)
+            ? profile.social.instagram
+            : "";
+          profile.social.linkedin = !isEmpty(profile.social.linkedin)
+            ? profile.social.linkedin
+            : "";
+          this.setState({
+            handle: profile.handle,
+            company: profile.company,
+            website: profile.website,
+            location: profile.location,
+            status: profile.status,
+            skills: profile.skills,
+            githubusername: profile.githubusername,
+            bio: profile.bio,
+            twitter: profile.social.twitter,
+            facebook: profile.social.facebook,
+            instagram: profile.social.instagram,
+            youtube: profile.social.youtube,
+            linkedin: profile.social.linkedin
+          });
+          return;
+        }
+        this.setState({
+          handle: profile.handle,
+          company: profile.company,
+          website: profile.website,
+          location: profile.location,
+          status: profile.status,
+          skills: profile.skills,
+          githubusername: profile.githubusername
+        });
+        return;
+      }
+    });
   }
   onSubmit = e => {
     e.preventDefault();
@@ -113,7 +174,7 @@ class CreateProfile extends Component {
       { label: "Developer", value: "Developer" },
       { label: "Junior Developer", value: "Junior Developer" },
       { label: "Senior Developer", value: "Senior Developer" },
-      { label: "Manager", value: "Manager" },
+      { label: "manager", value: "manager" },
       { label: "Student or Learning", value: "Student or Learning" },
       { label: "Instructor or Teacher", value: "Instructor or Teacher" },
       { label: "Intern", value: "Intern" },
@@ -124,10 +185,7 @@ class CreateProfile extends Component {
         <div className="container">
           <div className="row">
             <div className="col-md-8 m-auto">
-              <h1 className="display-4 text-center">Create Your Profile</h1>
-              <p className="lead text-center">
-                Let's get some information to make your profile
-              </p>
+              <h1 className="display-4 text-center">Edit Your Profile</h1>
               <small className="d-block pb-3">* = required fields</small>
               <form onSubmit={this.onSubmit}>
                 <TextFieldGroup
@@ -197,8 +255,8 @@ class CreateProfile extends Component {
                 />
                 <div className="mb-4">
                   <button
-                    className="btn btn-light"
                     type="button"
+                    className="btn btn-light"
                     onClick={() => {
                       this.setState(previousState => ({
                         displaySocialInputs: !previousState.displaySocialInputs
@@ -222,18 +280,23 @@ class CreateProfile extends Component {
     );
   }
 }
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
   profile: PropTypes.object.isRequired,
-  errors: PropTypes.object.isRequired
+  errors: PropTypes.object.isRequired,
+  create: PropTypes.func.isRequired,
+  getCurrentProfile: PropTypes.func.isRequired
 };
 const mapDispatchToProps = dispatch => ({
-  create: (data, history) => dispatch(createProfile(data, history))
+  create: (data, history) => dispatch(createProfile(data, history)),
+  getCurrentProfile: () => dispatch(getCurrentUser())
 });
 const mapStateToProps = state => ({
   profile: state.profile,
   errors: state.errors
 });
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CreateProfile));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(EditProfile)
+);

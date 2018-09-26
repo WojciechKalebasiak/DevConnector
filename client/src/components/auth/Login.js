@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { loginUser } from "../../actions/authActions";
 import { withRouter } from "react-router-dom";
-import TextFieldGroup from '../common/TexFieldGroup';
+import TextFieldGroup from '../common/TextFieldGroup';
 //Redux
 import { connect } from "react-redux";
 
