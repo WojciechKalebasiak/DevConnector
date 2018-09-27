@@ -6,7 +6,6 @@ import {
   CLEAR_CURRENT_PROFILE,
   SET_CURRENT_USER
 } from "./types";
-
 export const getCurrentUser = () => dispatch =>
   new Promise((resolve, reject) => {
     dispatch(setProfileLoading());
@@ -41,3 +40,28 @@ export const deleteProfile = () => dispatch => {
       .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
   }
 };
+export const addExperience = (data, history) => dispatch => {
+  axios
+    .post("/api/profile/experience", data)
+    .then(res => history.push("/dashboard"))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+export const addEducation = (data, history) => dispatch => {
+  axios
+    .post("/api/profile/education", data)
+    .then(res => history.push('/dashboard'))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+export const deleteExperience = (id) => dispatch => {
+  axios
+    .delete(`/api/profile/experience/${id}`)
+    .then(res => dispatch(getCurrentUser()))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+export const deleteEducation = (id) => dispatch => {
+  axios
+    .delete(`/api/profile/education/${id}`)
+    .then(res => dispatch(getCurrentUser()))
+    .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
+};
+
