@@ -201,7 +201,8 @@ router.post(
         fieldofstudy: req.body.fieldofstudy,
         from: req.body.from,
         to: req.body.to,
-        description: req.body.description
+        description: req.body.description,
+        current:req.body.current
       };
 
       profile.education.unshift(newEducation);
