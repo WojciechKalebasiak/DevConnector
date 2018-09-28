@@ -65,3 +65,4 @@ typings/
 
 #Remove sensitiva data
 /config/key.json
+client/src/key.json

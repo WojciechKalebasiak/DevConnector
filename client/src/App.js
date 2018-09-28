@@ -11,6 +11,10 @@ import Dashboard from "./components/dashboard/dashboard";
 import createProfile from "./components/createProfile/createProfile";
 import EditProfile from "./components/editProfile/EditProfile";
 import AddExperience from "./components/addCredentials/AddExperience";
+import AddEducation from "./components/addCredentials/AddEducation";
+import Profiles from "./components/profiles/Profiles";
+import Profile from "./components/profile/Profile";
+import notFound from "./components/notfound/notFound";
 //Redux
 import { Provider } from "react-redux";
 import store from "./store";
@@ -21,7 +25,6 @@ import { setCurrentUser, logoutUser } from "./actions/authActions";
 import { clearCurrentProfile } from "./actions/profileActions";
 
 import "./App.css";
-import AddEducation from "./components/addCredentials/AddEducation";
 
 //Check for token
 if (localStorage.jwtToken) {
@@ -48,6 +51,9 @@ class App extends Component {
             <Route exact path="/" component={Landing} />
             <div className="container">
               <Route exact path="/register" component={Register} />
+              <Route exact path="/profiles" component={Profiles} />
+              <Route exact path="/profile/:handle" component={Profile} />
+
               <Route exact path="/login" component={Login} />
               <PrivateRoute exact path="/dashboard" component={Dashboard} />
               <PrivateRoute
@@ -70,6 +76,7 @@ class App extends Component {
                 path="/add-education"
                 component={AddEducation}
               />
+              <Route exact path="/not-found" component={notFound} />
             </div>
             <Footer />
           </div>
