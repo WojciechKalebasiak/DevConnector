@@ -3,7 +3,7 @@ const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const keys = require("../../config/key.json");
+const {secret} = require("../../config/keys.js");
 const passport = require("passport");
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
@@ -84,7 +84,7 @@ router.post("/login", (req, res) => {
             name: user.name,
             avatar: user.avatar
           };
-          jwt.sign(payload, keys.secret, { expiresIn: 3600 }, (err, token) => {
+          jwt.sign(payload, secret, { expiresIn: 3600 }, (err, token) => {
             res.json({ success: true, token: `Bearer ${token}` });
           });
         } else {

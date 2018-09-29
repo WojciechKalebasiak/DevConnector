@@ -64,5 +64,5 @@ typings/
 .next
 
 #Remove sensitiva data
-/config/key.json
+/config/keys_dev.js
 client/src/key.json
