@@ -15,6 +15,11 @@ class Navbar extends Component {
     const { isAuthenticated, user } = this.props.auth;
     const authLinks = (
       <ul className="navbar-nav ml-auto">
+      <li className="nav-item">
+          <Link className="nav-link" to="/feed">
+            Post Feed
+          </Link>
+        </li>
         <li className="nav-item">
           <Link className="nav-link" to="/dashboard">
             Dashboard
@@ -22,14 +27,14 @@ class Navbar extends Component {
         </li>
         <li className="nav-item">
           <Link to="/" className="nav-link" onClick={this.onLogoutClick}>
+            <span>Logout </span>
             <img
               src={user.avatar}
               alt={user.name}
               title="You must have Gravatar connected to email to display image"
-              style={{ width: "25px", marginRight: "5px" }}
+              style={{ width: "15px", marginLeft: "5px" }}
               className="rounded-circle"
             />
-            <span>Logout</span>
           </Link>
         </li>
       </ul>

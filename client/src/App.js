@@ -15,6 +15,9 @@ import AddEducation from "./components/addCredentials/AddEducation";
 import Profiles from "./components/profiles/Profiles";
 import Profile from "./components/profile/Profile";
 import notFound from "./components/notfound/notFound";
+import Posts from "./components/posts/Posts";
+import Post from "./components/post/Post";
+import PostEdit from "./components/posts/PostEdit";
 //Redux
 import { Provider } from "react-redux";
 import store from "./store";
@@ -76,6 +79,13 @@ class App extends Component {
                 path="/add-education"
                 component={AddEducation}
               />
+              <PrivateRoute
+                exact
+                path="/post/update/:id"
+                component={PostEdit}
+              />
+              <PrivateRoute exact path="/feed" component={Posts} />
+              <PrivateRoute exact path="/post/:postid" component={Post} />
               <Route exact path="/not-found" component={notFound} />
             </div>
             <Footer />
