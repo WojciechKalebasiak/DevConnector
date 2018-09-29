@@ -42,7 +42,7 @@ class PostItem extends Component {
               />
             </a>
             <br />
-            <p className="text-center">{post.name}</p>
+            <p className="text-center"><strong>{post.name}</strong></p>
           </div>
 
           <div className="col-md-10">

@@ -152,11 +152,6 @@ router.post(
           nopostfound: "No post found with that ID"
         });
       }
-      if (post.user.toString() !== req.user.id) {
-        return res.status(401).json({
-          notauthorized: "User not authorized"
-        });
-      }
       if (post.likes.filter(like => like.user.toString() === req.user.id).length > 0) {
         return res.status(400).json({
           alreadyliked: "User already liked this post"
@@ -185,11 +180,6 @@ router.post(
       if (!post) {
         return res.status(404).json({
           nopostfound: "No post found with that ID"
-        });
-      }
-      if (post.user.toString() !== req.user.id) {
-        return res.status(401).json({
-          notauthorized: "User not authorized"
         });
       }
       if (!post.likes.filter(like => like.user.toString() === req.user.id).length) {

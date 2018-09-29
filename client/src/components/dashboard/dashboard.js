@@ -31,10 +31,11 @@ class Dashboard extends Component {
             <ProfileActions />
             <Experience exp={profile.experience} />
             <Education edu={profile.education} />
-            <div style={{ marginBottom: "60px" }} />
-            <button className="btn btn-danger" onClick={this.onDeleteClick}>
+            <div style={{ marginBottom: "60px", marginTop:"40px" }} className="text-center text-md-left">
+            <button className="btn btn-danger mx-auto" onClick={this.onDeleteClick}>
               Delete My Account
             </button>
+            </div>
           </div>
         );
       } else {

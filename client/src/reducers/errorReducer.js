@@ -9,7 +9,7 @@ const errorReducer = (state = {}, action) => {
         ...action.payload
       };
     case CLEAR_ERRORS:
-      return null;
+      return {};
   }
 };
 export default errorReducer;

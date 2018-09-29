@@ -31,10 +31,10 @@ class Experience extends Component {
       </tr>
     ));
     return (
-      <div className="experience">
+      <div className="experience d-none d-md-block">
         <h4 className="mb-4">Experience Credentials</h4>
         <table className="table">
-          <thead>
+          <thead className="thead-dark">
             <tr>
               <th>Company</th>
               <th>Title</th>
