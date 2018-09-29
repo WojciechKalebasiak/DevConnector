@@ -3,7 +3,7 @@ const router = express.Router();
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const {secret} = require("../../config/keys.js");
+const { secret } = require("../../config/keys.js");
 const passport = require("passport");
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
@@ -20,7 +20,8 @@ const validateLogin = require("../../validation/login");
 // @desc Register a user
 // @acces Public
 router.post("/register", (req, res) => {
-  const { email, name, password } = req.body;
+  const { name, password } = req.body;
+  const email = req.body.email.toLowerCase();
   const avatar = gravatar.url(email, {
     s: "200",
     r: "pg",
@@ -71,7 +72,8 @@ router.post("/login", (req, res) => {
   if (!isValid) {
     return res.status(400).json(errors);
   }
-  const { email, password } = req.body;
+  const { password } = req.body;
+  const email = req.body.email.toLowerCase();
   User.findOne({ email })
     .then(user => {
       if (!user) {

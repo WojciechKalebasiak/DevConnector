@@ -72,10 +72,17 @@ export const getProfiles = () => dispatch => {
     .then(res => dispatch({ type: GET_PROFILES, payload: res.data }))
     .catch(err => dispatch({ type: GET_PROFILES, payload: null }));
 };
-export const getProfileByHandle = handle => dispatch => {
-  dispatch(setProfileLoading());
-  axios
-    .get(`/api/profile/handle/${handle}`)
-    .then(res => dispatch({ type: GET_PROFILE, payload: res.data }))
-    .catch(err => dispatch({ type: GET_PROFILE, payload: null }));
-};
+export const getProfileByHandle = handle => dispatch =>
+  new Promise((resolve, reject) => {
+    dispatch(setProfileLoading());
+    axios
+      .get(`/api/profile/handle/${handle}`)
+      .then(res => {
+        dispatch({ type: GET_PROFILE, payload: res.data });
+        resolve();
+      })
+      .catch(err => {
+        dispatch({ type: GET_PROFILE, payload: null });
+        reject();
+      });
+  });
