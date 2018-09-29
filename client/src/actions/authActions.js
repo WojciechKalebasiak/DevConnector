@@ -1,4 +1,4 @@
-import { SET_CURRENT_USER, GET_ERRORS } from "./types";
+import { SET_CURRENT_USER, GET_ERRORS, CLEAR_ERRORS } from "./types";
 import axios from "axios";
 import setAuthToken from "../utlis/setAuthToken";
 import jwt_decode from "jwt-decode";
@@ -8,7 +8,7 @@ export const registerUser = (userData, history) => dispatch => {
   axios
     .post("/api/users/register", userData)
     .then(res => {
-      dispatch({ type: GET_ERRORS, payload: null });
+      dispatch({ type: CLEAR_ERRORS});
       history.push("/login");
     })
     .catch(err => {
