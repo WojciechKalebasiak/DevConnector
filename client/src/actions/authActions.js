@@ -8,7 +8,7 @@ export const registerUser = (userData, history) => dispatch => {
   axios
     .post("/api/users/register", userData)
     .then(res => {
-      dispatch({ type: CLEAR_ERRORS});
+      dispatch({ type: CLEAR_ERRORS });
       history.push("/login");
     })
     .catch(err => {
@@ -27,6 +27,7 @@ export const loginUser = userData => dispatch => {
       setAuthToken(token);
       const decoded = jwt_decode(token);
       dispatch(setCurrentUser(decoded));
+      dispatch({ type: CLEAR_ERRORS });
     })
     .catch(err => {
       dispatch({ type: GET_ERRORS, payload: err.response.data });

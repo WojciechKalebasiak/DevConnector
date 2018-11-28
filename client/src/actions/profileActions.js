@@ -5,7 +5,8 @@ import {
   GET_ERRORS,
   CLEAR_CURRENT_PROFILE,
   SET_CURRENT_USER,
-  GET_PROFILES
+  GET_PROFILES,
+  CLEAR_ERRORS
 } from "./types";
 export const getCurrentUser = () => dispatch =>
   new Promise((resolve, reject) => {
@@ -31,6 +32,7 @@ export const createProfile = (profileData, history) => dispatch => {
   axios
     .post("/api/profile", profileData)
     .then(res => history.push("/dashboard"))
+    .then(() => dispatch({ type: CLEAR_ERRORS }))
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 export const deleteProfile = () => dispatch => {
