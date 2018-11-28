@@ -47,12 +47,14 @@ export const addExperience = (data, history) => dispatch => {
   axios
     .post("/api/profile/experience", data)
     .then(res => history.push("/dashboard"))
+    .then(()=>dispatch({type:CLEAR_ERRORS}))
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 export const addEducation = (data, history) => dispatch => {
   axios
     .post("/api/profile/education", data)
     .then(res => history.push("/dashboard"))
+    .then(()=>dispatch({type:CLEAR_ERRORS}))
     .catch(err => dispatch({ type: GET_ERRORS, payload: err.response.data }));
 };
 export const deleteExperience = id => dispatch => {
